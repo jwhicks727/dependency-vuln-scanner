@@ -1,0 +1,16 @@
+name,ecosystem,version
+requests,PyPI,2.19.0
+urllib3,PyPI,1.24.1
+django,PyPI,2.2.0
+flask,PyPI,0.12.2
+jinja2,PyPI,2.10
+pyyaml,PyPI,5.1
+pillow,PyPI,6.2.0
+numpy,PyPI,1.16.0
+cryptography,PyPI,2.3
+lodash,npm,4.17.4
+minimist,npm,1.2.0
+axios,npm,0.18.0
+express,npm,4.16.0
+json5,npm,2.1.0
+org.apache.logging.log4j:log4j-core,Maven,2.14.1
