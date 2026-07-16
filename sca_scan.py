@@ -29,8 +29,8 @@ MAX_RETRIES = 4          # attempts for a transient failure before giving up
 BACKOFF_BASE_SECONDS = 1  # 1s, 2s, 4s, 8s...
 
 FIELDNAMES = [
-    "package", "ecosystem", "installed_version", "cve_id", "osv_id",
-    "summary", "severity", "cvss_vector", "published", "modified",
+    "package", "ecosystem", "installed_version", "dependency_type", "cve_id",
+    "osv_id", "summary", "severity", "cvss_vector", "published", "modified",
     "aliases", "reference_url",
 ]
 
@@ -124,9 +124,10 @@ def first_reference(vuln):
     return refs[0].get("url", "") if refs else ""
 
 
-def flatten(name, ecosystem, version, vuln):
+def flatten(name, ecosystem, version, dependency_type, vuln):
     return {
         "package": name, "ecosystem": ecosystem, "installed_version": version,
+        "dependency_type": dependency_type,
         "cve_id": pick_cve(vuln), "osv_id": vuln.get("id", ""),
         "summary": (vuln.get("summary") or "").strip().replace("\n", " "),
         "severity": pick_severity(vuln), "cvss_vector": pick_cvss_vector(vuln),
@@ -141,7 +142,15 @@ def read_dependencies(path):
         for row in csv.DictReader(f):
             name = (row.get("name") or "").strip()
             if name:
-                rows.append((name, (row.get("ecosystem") or "").strip(), (row.get("version") or "").strip()))
+                # dependency_type is optional - older dependencies.csv files
+                # (like the synthetic seed list) predate this column.
+                dep_type = (row.get("dependency_type") or "unknown").strip() or "unknown"
+                rows.append((
+                    name,
+                    (row.get("ecosystem") or "").strip(),
+                    (row.get("version") or "").strip(),
+                    dep_type,
+                ))
         return rows
 
 
@@ -161,7 +170,7 @@ def main():
     findings = []
     retried_ok = terminal_skips = exhausted_skips = 0
 
-    for name, ecosystem, version in deps:
+    for name, ecosystem, version, dependency_type in deps:
         label = f"{name} {version} ({ecosystem})"
         try:
             vulns, status = query_osv(name, ecosystem, version)
@@ -183,7 +192,7 @@ def main():
         if vulns:
             print(f"  {tag}  {label} - {len(vulns)} finding(s)")
             for vuln in vulns:
-                findings.append(flatten(name, ecosystem, version, vuln))
+                findings.append(flatten(name, ecosystem, version, dependency_type, vuln))
         else:
             print(f"  {tag}  {label}")
 
