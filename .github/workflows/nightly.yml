@@ -3,13 +3,19 @@ name: Nightly scan
 # Trigger 2 of 2: the WORLD changed. New vulnerabilities get disclosed
 # against dependencies you already have - code diffs aren't the only
 # thing that moves your risk. 13:00 UTC = 6am Pacific.
+#
+# TARGET-DRIVEN: this workflow scans whatever target.json points at.
+# It does not know or care that today that's House Points - swapping
+# targets is a one-file edit (target.json), never a workflow change.
+# Today: single target. Designed so a future version could loop over
+# an array of targets without changing this file's shape.
 on:
   schedule:
     - cron: "0 13 * * *"
   workflow_dispatch: {}   # manual run button, for testing and demos
 
 permissions:
-  contents: write   # the run commits fresh data/ back to the repo
+  contents: write   # the run commits fresh data/ back to THIS repo
 
 concurrency:
   group: nightly
@@ -19,7 +25,8 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout scanner repo
+        uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
@@ -29,12 +36,31 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Preserve yesterday's findings for delta detection
+      - name: Read target config
+        id: target
+        run: |
+          echo "name=$(jq -r .name target.json)" >> "$GITHUB_OUTPUT"
+          echo "git_url=$(jq -r .git_url target.json)" >> "$GITHUB_OUTPUT"
+          echo "manifest_type=$(jq -r .manifest_type target.json)" >> "$GITHUB_OUTPUT"
+          echo "issue_repo=$(jq -r .issue_repo target.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Clone target repo
+        run: git clone --depth 1 "${{ steps.target.outputs.git_url }}" target-repo
+
+      - name: Preserve previous findings for delta detection
         run: cp data/enriched_findings.json previous_enriched.json || true
 
-      - name: Scan showcase target (Juice Shop, ~1.6k packages)
-        run: python sca_scan.py --input juice_shop_deps.csv
-          --output nightly_findings.csv
+      - name: Convert target's lockfile to scanner input
+        run: |
+          if [ "${{ steps.target.outputs.manifest_type }}" = "npm" ]; then
+            python lockfile_to_deps.py target-repo/package-lock.json nightly_deps.csv
+          else
+            echo "Unsupported manifest_type: ${{ steps.target.outputs.manifest_type }}" >&2
+            exit 2
+          fi
+
+      - name: Scan target's dependencies
+        run: python sca_scan.py --input nightly_deps.csv --output nightly_findings.csv
 
       - name: Enrich with EPSS + KEV
         run: python enrich_findings.py --input nightly_findings.csv
@@ -51,7 +77,7 @@ jobs:
         id: delta
         run: python notify.py --old previous_enriched.json
           --new data/enriched_findings.json
-          --repo ${{ github.repository }}
+          --repo ${{ steps.target.outputs.issue_repo }}
           --out-html email.html --out-json data/new_findings.json
 
       - name: Commit refreshed data
@@ -59,7 +85,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git commit -m "Nightly scan: refresh findings data" || echo "No changes to commit"
+          git commit -m "Nightly scan of ${{ steps.target.outputs.name }}: refresh findings data" || echo "No changes to commit"
           git push
 
       - name: Email new findings
@@ -70,7 +96,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "[vuln-scanner] ${{ steps.delta.outputs.new_count }} new finding(s)"
+          subject: "[vuln-scanner] ${{ steps.target.outputs.name }}: ${{ steps.delta.outputs.new_count }} new finding(s)"
           from: ${{ secrets.MAIL_USERNAME }}
           to: ${{ secrets.MAIL_USERNAME }}
           html_body: file://email.html
