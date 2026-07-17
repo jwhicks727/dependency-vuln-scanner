@@ -90,7 +90,7 @@ def query_osv(name, ecosystem, version):
 
             time.sleep(wait)
 
-        except requests.RequestException as exc:
+        except requests.RequestException:
             # Network-level failure (DNS, connection, timeout) - also transient.
             attempt += 1
             if attempt >= MAX_RETRIES:
