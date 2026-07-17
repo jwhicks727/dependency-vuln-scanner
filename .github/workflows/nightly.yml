@@ -1,0 +1,81 @@
+name: Nightly scan
+
+# Trigger 2 of 2: the WORLD changed. New vulnerabilities get disclosed
+# against dependencies you already have - code diffs aren't the only
+# thing that moves your risk. 13:00 UTC = 6am Pacific.
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch: {}   # manual run button, for testing and demos
+
+permissions:
+  contents: write   # the run commits fresh data/ back to the repo
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Preserve yesterday's findings for delta detection
+        run: cp data/enriched_findings.json previous_enriched.json || true
+
+      - name: Scan showcase target (Juice Shop, ~1.6k packages)
+        run: python sca_scan.py --input juice_shop_deps.csv
+          --output nightly_findings.csv
+
+      - name: Enrich with EPSS + KEV
+        run: python enrich_findings.py --input nightly_findings.csv
+          --output-csv data/enriched_findings.csv
+          --output-json data/enriched_findings.json
+
+      - name: Append to scan history
+        run: python append_history.py data/enriched_findings.json data/history.csv
+
+      - name: Refresh status badge
+        run: python make_badge.py data/enriched_findings.json data/badge.json
+
+      - name: Detect new findings since last run
+        id: delta
+        run: python notify.py --old previous_enriched.json
+          --new data/enriched_findings.json
+          --repo ${{ github.repository }}
+          --out-html email.html --out-json data/new_findings.json
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Nightly scan: refresh findings data" || echo "No changes to commit"
+          git push
+
+      - name: Email new findings
+        if: ${{ steps.delta.outputs.new_count != '0' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[vuln-scanner] ${{ steps.delta.outputs.new_count }} new finding(s)"
+          from: ${{ secrets.MAIL_USERNAME }}
+          to: ${{ secrets.MAIL_USERNAME }}
+          html_body: file://email.html
+
+      # Gate runs LAST, after data is safely committed, so a red nightly
+      # still publishes. Red run = free GitHub notification of a breach.
+      - name: Security gate (report + red X on breach)
+        run: python gate.py --input data/enriched_findings.json

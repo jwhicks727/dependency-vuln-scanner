@@ -1,0 +1,58 @@
+name: CI
+
+# Trigger 1 of 2: code changed. New code can add new dependencies,
+# so every push and PR re-checks the world we're about to merge.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write   # lets the gate post its summary as a PR comment
+
+jobs:
+  checks:
+    name: Lint, tests, security gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Unit tests (pytest)
+        run: python -m pytest tests/ -v
+
+      # --- the scanner gating its own environment ---
+      - name: Inventory this environment
+        run: python env_to_deps.py self_deps.csv
+
+      - name: Scan against OSV
+        run: python sca_scan.py --input self_deps.csv --output self_findings.csv
+
+      - name: Enrich with EPSS + KEV
+        run: python enrich_findings.py --input self_findings.csv
+          --output-csv self_enriched.csv --output-json self_enriched.json
+
+      - name: Security gate
+        id: gate
+        run: python gate.py --input self_enriched.json
+          --markdown-summary gate_summary.md
+
+      - name: Comment gate result on PR
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment ${{ github.event.pull_request.number }}
+          --body-file gate_summary.md
