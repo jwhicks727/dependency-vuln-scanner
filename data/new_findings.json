@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "package": "brace-expansion",
+    "ecosystem": "npm",
+    "installed_version": "5.0.6",
+    "dependency_type": "dev",
+    "cve_id": "CVE-2026-13149",
+    "osv_id": "GHSA-3jxr-9vmj-r5cp",
+    "summary": "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+    "severity": "HIGH",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+    "published": "2026-07-20T20:51:09Z",
+    "modified": "2026-07-20T21:00:25.229035088Z",
+    "aliases": "CVE-2026-13149",
+    "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-3jxr-9vmj-r5cp",
+    "epss_score": "0.00361",
+    "epss_percentile": "0.28425",
+    "kev": "false",
+    "kev_date_added": "",
+    "risk_tier": "LOW"
+  }
+]
