@@ -13,8 +13,8 @@
     "modified": "2026-07-15T22:30:42.819627456Z",
     "aliases": "CVE-2026-49356",
     "reference_url": "https://github.com/babel/babel/security/advisories/GHSA-4x5r-pxfx-6jf8",
-    "epss_score": "0.00116",
-    "epss_percentile": "0.01921",
+    "epss_score": "0.00126",
+    "epss_percentile": "0.02660",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -33,8 +33,8 @@
     "modified": "2026-07-21T14:59:37.393087727Z",
     "aliases": "CVE-2026-13149",
     "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-3jxr-9vmj-r5cp",
-    "epss_score": "0.00361",
-    "epss_percentile": "0.28571",
+    "epss_score": "0.00278",
+    "epss_percentile": "0.19938",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -53,8 +53,8 @@
     "modified": "2026-07-15T22:30:44.486843817Z",
     "aliases": "CVE-2026-53571",
     "reference_url": "https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff",
-    "epss_score": "0.00393",
-    "epss_percentile": "0.31801",
+    "epss_score": "0.00587",
+    "epss_percentile": "0.44526",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -73,8 +73,8 @@
     "modified": "2026-07-02T19:59:25.649988255Z",
     "aliases": "CVE-2026-53632",
     "reference_url": "https://github.com/vitejs/launch-editor/security/advisories/GHSA-v6wh-96g9-6wx3",
-    "epss_score": "0.00322",
-    "epss_percentile": "0.24524",
+    "epss_score": "0.00408",
+    "epss_percentile": "0.33378",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
