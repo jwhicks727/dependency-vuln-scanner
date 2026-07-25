@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "package": "brace-expansion",
+    "ecosystem": "npm",
+    "installed_version": "5.0.6",
+    "dependency_type": "dev",
+    "cve_id": "CVE-2026-14257",
+    "osv_id": "GHSA-mh99-v99m-4gvg",
+    "summary": "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+    "severity": "HIGH",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "published": "2026-07-24T21:53:14Z",
+    "modified": "2026-07-24T22:00:28.185017385Z",
+    "aliases": "CVE-2026-14257",
+    "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-mh99-v99m-4gvg",
+    "epss_score": "0.00339",
+    "epss_percentile": "0.26412",
+    "kev": "false",
+    "kev_date_added": "",
+    "risk_tier": "LOW"
+  },
+  {
+    "package": "postcss",
+    "ecosystem": "npm",
+    "installed_version": "8.5.14",
+    "dependency_type": "dev",
+    "cve_id": "GHSA-r28c-9q8g-f849",
+    "osv_id": "GHSA-r28c-9q8g-f849",
+    "summary": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+    "severity": "HIGH",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+    "published": "2026-07-24T16:24:55Z",
+    "modified": "2026-07-24T16:30:25.763861240Z",
+    "aliases": "",
+    "reference_url": "https://github.com/postcss/postcss/security/advisories/GHSA-r28c-9q8g-f849",
+    "epss_score": "",
+    "epss_percentile": "",
+    "kev": "false",
+    "kev_date_added": "",
+    "risk_tier": "UNSCORED"
+  }
+]
