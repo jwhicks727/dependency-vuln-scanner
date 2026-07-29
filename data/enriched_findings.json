@@ -14,7 +14,7 @@
     "aliases": "CVE-2026-49356",
     "reference_url": "https://github.com/babel/babel/security/advisories/GHSA-4x5r-pxfx-6jf8",
     "epss_score": "0.00126",
-    "epss_percentile": "0.02654",
+    "epss_percentile": "0.02662",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -33,8 +33,8 @@
     "modified": "2026-07-21T14:59:37.393087727Z",
     "aliases": "CVE-2026-13149",
     "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-3jxr-9vmj-r5cp",
-    "epss_score": "0.00278",
-    "epss_percentile": "0.20030",
+    "epss_score": "0.00348",
+    "epss_percentile": "0.27428",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -54,7 +54,7 @@
     "aliases": "CVE-2026-14257",
     "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-mh99-v99m-4gvg",
     "epss_score": "0.00339",
-    "epss_percentile": "0.26427",
+    "epss_percentile": "0.26439",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -94,7 +94,7 @@
     "aliases": "CVE-2026-53571",
     "reference_url": "https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff",
     "epss_score": "0.00587",
-    "epss_percentile": "0.44616",
+    "epss_percentile": "0.44645",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
@@ -114,7 +114,7 @@
     "aliases": "CVE-2026-53632",
     "reference_url": "https://github.com/vitejs/launch-editor/security/advisories/GHSA-v6wh-96g9-6wx3",
     "epss_score": "0.00408",
-    "epss_percentile": "0.33484",
+    "epss_percentile": "0.33502",
     "kev": "false",
     "kev_date_added": "",
     "risk_tier": "LOW"
