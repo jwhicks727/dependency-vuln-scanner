@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "package": "brace-expansion",
+    "ecosystem": "npm",
+    "installed_version": "5.0.6",
+    "dependency_type": "dev",
+    "cve_id": "CVE-2026-69152",
+    "osv_id": "GHSA-rgw5-rvv9-x895",
+    "summary": "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation",
+    "severity": "HIGH",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "published": "2026-08-03T16:35:32Z",
+    "modified": "2026-08-03T20:30:18.215975726Z",
+    "aliases": "CVE-2026-69152",
+    "reference_url": "https://github.com/juliangruber/brace-expansion/security/advisories/GHSA-rgw5-rvv9-x895",
+    "epss_score": "0.00368",
+    "epss_percentile": "0.29491",
+    "kev": "false",
+    "kev_date_added": "",
+    "risk_tier": "LOW"
+  },
+  {
+    "package": "postcss",
+    "ecosystem": "npm",
+    "installed_version": "8.5.14",
+    "dependency_type": "dev",
+    "cve_id": "CVE-2026-69153",
+    "osv_id": "GHSA-fxqj-rqcc-2cmp",
+    "summary": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q \u2014 attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+    "severity": "MODERATE",
+    "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "published": "2026-08-03T17:11:39Z",
+    "modified": "2026-08-03T17:15:17.308863041Z",
+    "aliases": "CVE-2026-69153",
+    "reference_url": "https://github.com/postcss/postcss/security/advisories/GHSA-fxqj-rqcc-2cmp",
+    "epss_score": "0.00358",
+    "epss_percentile": "0.28481",
+    "kev": "false",
+    "kev_date_added": "",
+    "risk_tier": "LOW"
+  }
+]
